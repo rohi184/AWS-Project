@@ -1,0 +1,19 @@
+Get-ChildItem -Filter *.json | Get-Content |
+jq -r '.Records[] |
+[
+  .eventTime,
+  .eventSource,
+  .eventName,
+  .sourceIPAddress,
+  .userIdentity.type,
+  .userIdentity.arn,
+  .userIdentity.accountId,
+  (.requestParameters | tostring),
+  (.responseElements | tostring),
+  .errorCode,
+  .errorMessage,
+  .userAgent
+] | @csv' |
+ConvertFrom-Csv -Header Time,EventSource,EventName,SourceIP,IdentityType,ARN,AccountId,RequestParameters,ResponseElements,ErrorCode,ErrorMessage,UserAgent |
+Sort-Object Time |
+Out-GridView
